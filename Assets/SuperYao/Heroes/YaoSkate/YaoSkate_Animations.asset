@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f394c906b3f3f94685a5e8ce953bf41, type: 3}
+  m_Name: YaoSkate_Animations
+  m_EditorClassIdentifier: Assembly-CSharp::SuperYao.HeroAnimationSet
+  heroName: Yao (skate)
+  sourceHeight: 175
+  idle:
+  - {fileID: 21300000, guid: f5f27309c81014941a4b451e97d6db35, type: 3}
+  - {fileID: 21300000, guid: f056426bef5d17c45a47adf50f8dbdb1, type: 3}
+  run:
+  - {fileID: 21300000, guid: b04526f3739982c40b10898b5d41c49a, type: 3}
+  - {fileID: 21300000, guid: bc58d2290a83fdb46a71205d21956972, type: 3}
+  - {fileID: 21300000, guid: e1b28f4142eac9e4a9b660162975175b, type: 3}
+  - {fileID: 21300000, guid: 1af50ba0a06f4a547aabb613f60b1fdc, type: 3}
+  - {fileID: 21300000, guid: 8e0bc12ac795ec04f8e1f1dcff704abc, type: 3}
+  - {fileID: 21300000, guid: 62a64a992a085ca4bae625693f2751bd, type: 3}
+  - {fileID: 21300000, guid: be238aefc2c6566418ac5bde1d012ffd, type: 3}
+  - {fileID: 21300000, guid: f88cb109c903a5b44bee3e51c216ae3a, type: 3}
+  jump:
+  - {fileID: 21300000, guid: ce64e3f342826944ba2bd41b042774c3, type: 3}
+  - {fileID: 21300000, guid: d6d6172510df666409441625732ae1b6, type: 3}
+  - {fileID: 21300000, guid: a6bc51dfaedfa7743a89530fa17a5be7, type: 3}
+  - {fileID: 21300000, guid: e3c4eb5c000cc6d4e84275045839beb5, type: 3}
+  - {fileID: 21300000, guid: 893aa979dabff8947843533fef89c4de, type: 3}
+  - {fileID: 21300000, guid: 5e9c8e1db6c1acc4dbea610c0c4fbfcb, type: 3}
+  - {fileID: 21300000, guid: dced726f1e04ce6459074b87a509dbaa, type: 3}
+  - {fileID: 21300000, guid: 43c478e10413fea468162eba73d65407, type: 3}
+  fall:
+  - {fileID: 21300000, guid: 9532bac375cbd6e4bb0afc44fcb8cb3c, type: 3}
+  crouch:
+  - {fileID: 21300000, guid: 3b7809a62cbdec044962a525e6937ac1, type: 3}
+  hover: []
+  glide: []
+  walk:
+  - {fileID: 21300000, guid: f3ba24c039fd82d4bbbf018acd02693d, type: 3}
+  - {fileID: 21300000, guid: 4c61762902f860d499506cd13d219e5c, type: 3}
+  - {fileID: 21300000, guid: 099183a4c03e6b64b954a600fb225a51, type: 3}
+  - {fileID: 21300000, guid: 6dd1f80635c040d498ccc404f7ff99fb, type: 3}
+  - {fileID: 21300000, guid: 91cfd9fb18e36fd4eaa78fef120f3ad3, type: 3}
+  - {fileID: 21300000, guid: 30eddc23c19ae1644bd0458a12f0e117, type: 3}
+  - {fileID: 21300000, guid: 3f7ced7ba172bd3499be5d1bdc02873d, type: 3}
+  - {fileID: 21300000, guid: 5aae728ef747db04e974fab7f3fb30cb, type: 3}
+  walkSourceHeight: 0
+  runSourceHeight: 0
+  walkCycle: 4
+  runCycle: 5.5
+  jumpTakeoff: 2
+  jumpRise: 3
+  jumpApex: 4
+  jumpFall: 5
+  crouchFrame: 0
+  crouchSlideFrame: 0
+  idleFps: 2
+  land:
+  - {fileID: 21300000, guid: 2defeccbba700e14fac58cabfcaf960f, type: 3}
+  attack:
+  - {fileID: 21300000, guid: cbde41e6f9cf9cf4da2b4fe6f928711e, type: 3}
+  - {fileID: 21300000, guid: b73ddc8e0a387da49a175b98dd3fbc35, type: 3}
+  - {fileID: 21300000, guid: 5146d7d7c1674854a932df6d62d3f4a0, type: 3}
+  - {fileID: 21300000, guid: 0c7d7922880999344b8a2aa665f48605, type: 3}
+  hurt:
+  - {fileID: 21300000, guid: 5a8607408c6d0084091b90494d724d34, type: 3}
+  - {fileID: 21300000, guid: 80e9d79edd2373e40b38ba70dba9eff1, type: 3}
+  - {fileID: 21300000, guid: 587c785d15ecd1a43b4bade6d50a5b5c, type: 3}
+  - {fileID: 21300000, guid: cb72f3654b46a7d4985b28192ebe4437, type: 3}
+  - {fileID: 21300000, guid: 24985dc30c24cf2468c9a90dc1b9fca8, type: 3}
+  - {fileID: 21300000, guid: 78948c524bc6a004f8b40746524a48f2, type: 3}
+  - {fileID: 21300000, guid: c0a5994b01a2bfe4e877a60058d31fd2, type: 3}
+  - {fileID: 21300000, guid: 5e20762b1b7b01b48bc2ae524c1d6c24, type: 3}
+  death:
+  - {fileID: 21300000, guid: d5ca256f5a160114e87ec37076e847d4, type: 3}
+  - {fileID: 21300000, guid: 94d93f15b8bafe44e942ee7de3628cd7, type: 3}
+  - {fileID: 21300000, guid: fa3516f9985a14b4f980292a960d423b, type: 3}
+  - {fileID: 21300000, guid: a780369d654be4f489bc6daae7ed7683, type: 3}
+  - {fileID: 21300000, guid: e05d6b9b9476b054e98adeeb466ea0b3, type: 3}
+  - {fileID: 21300000, guid: 7e2b74df528c6d4428591fc98eca900b, type: 3}
+  - {fileID: 21300000, guid: 68b7d84776c5f8e46aef63e635071dd3, type: 3}

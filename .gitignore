@@ -1,0 +1,45 @@
+# Unity : dossiers régénérés par l'éditeur
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Fichiers de Visual Studio / Rider générés par Unity
+.vs/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.utmp
+
+# Constructions et symboles
+*.apk
+*.aab
+*.unitypackage
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+crashlytics-build.properties
+
+# Clés de signature Android (ne jamais publier)
+*.keystore
+*.jks
+
+# Système
+.DS_Store
+Thumbs.db
+desktop.ini

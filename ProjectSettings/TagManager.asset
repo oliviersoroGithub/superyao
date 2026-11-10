@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Ciel
+    uniqueID: 100182627
+    locked: 0
+  - name: Nuages
+    uniqueID: 1328626691
+    locked: 0
+  - name: Horizon
+    uniqueID: 114554631
+    locked: 0
+  - name: BatimentsLointains
+    uniqueID: 785637377
+    locked: 0
+  - name: PlanIntermediaire
+    uniqueID: 1510892265
+    locked: 0
+  - name: Rue
+    uniqueID: 161685443
+    locked: 0
+  - name: Monde
+    uniqueID: 35746697
+    locked: 0
+  - name: Joueur
+    uniqueID: 1300746913
+    locked: 0
+  - name: AvantPlan
+    uniqueID: 524266159
+    locked: 0
+  m_RenderingLayers:
+  - Default
+  m_MigratedRenderPipelines: []

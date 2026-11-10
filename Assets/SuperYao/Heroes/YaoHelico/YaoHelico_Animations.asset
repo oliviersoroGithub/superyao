@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f394c906b3f3f94685a5e8ce953bf41, type: 3}
+  m_Name: YaoHelico_Animations
+  m_EditorClassIdentifier: Assembly-CSharp::SuperYao.HeroAnimationSet
+  heroName: "Yao (h\xE9lice)"
+  sourceHeight: 178
+  idle:
+  - {fileID: 21300000, guid: 13d3dc595ba4a2b498458ca8b221ba6c, type: 3}
+  - {fileID: 21300000, guid: f2ded1a6f2ec95d4c99bd7a26f307290, type: 3}
+  run:
+  - {fileID: 21300000, guid: ce70890527804354882b3873157affc6, type: 3}
+  - {fileID: 21300000, guid: 271a6be3f7c9d6c40b786e219a80a62c, type: 3}
+  - {fileID: 21300000, guid: 5c305e4d1cb58c04c85f8b74b7ecb46c, type: 3}
+  - {fileID: 21300000, guid: 36ef9f98e340e0a4b85d8e1f9da1b44b, type: 3}
+  - {fileID: 21300000, guid: 82993116c196b7e4290ab4a06cec7ab1, type: 3}
+  - {fileID: 21300000, guid: a52c4e54111fab24795b12902c356668, type: 3}
+  - {fileID: 21300000, guid: 075df6b0bb7ac9944a456d8e684d1a43, type: 3}
+  - {fileID: 21300000, guid: 87d53aa9d52987b429377e4b85c09185, type: 3}
+  jump:
+  - {fileID: 21300000, guid: 68c32e2ccb6cd404d898795cb9dfbd87, type: 3}
+  - {fileID: 21300000, guid: 3d009ebc50c6cc34daeafa1f0816ddce, type: 3}
+  - {fileID: 21300000, guid: 753716ec08a2ef842a36b6941009f4c1, type: 3}
+  - {fileID: 21300000, guid: 616ea6fd09bc76a42a3dde11bc9a17f6, type: 3}
+  fall:
+  - {fileID: 21300000, guid: e24d72748d35eb34e93625689e068e55, type: 3}
+  crouch:
+  - {fileID: 21300000, guid: f0a683710c82bae409080c69d58b940c, type: 3}
+  hover:
+  - {fileID: 21300000, guid: 666f7e4ec3c70644794741932b4a0df5, type: 3}
+  - {fileID: 21300000, guid: 2311894c5f48a6c4eb0c17b922b702cc, type: 3}
+  - {fileID: 21300000, guid: 6d29222eb91a66546a5143d45e61d578, type: 3}
+  - {fileID: 21300000, guid: da8ffdea759ce434795074eefccef0d4, type: 3}
+  - {fileID: 21300000, guid: ee5bbc4f18195544fb2ee4d872326385, type: 3}
+  - {fileID: 21300000, guid: 0f095d7f1148e2e4784f9e38be34f2f9, type: 3}
+  - {fileID: 21300000, guid: 2c65c4a2f58fe084593603adfef6de94, type: 3}
+  - {fileID: 21300000, guid: 4cdccef5a9c24424fac9f7c0ce0995a6, type: 3}
+  glide:
+  - {fileID: 21300000, guid: 97c789a2d9ec85e42bb32c025705fb61, type: 3}
+  - {fileID: 21300000, guid: 1c8a31f0e7227254988c511619d72ce2, type: 3}
+  - {fileID: 21300000, guid: 240fc019c9845bc4089409cf1ecc2bdf, type: 3}
+  - {fileID: 21300000, guid: ea4e61ef6dba0a247a0e0a704aa06b1c, type: 3}
+  - {fileID: 21300000, guid: 2c0adfbe1ee825748ae87f97b52f9ec1, type: 3}
+  walk:
+  - {fileID: 21300000, guid: 8925cefba8962c34d9d873d8e5122532, type: 3}
+  - {fileID: 21300000, guid: ff566cdf52bc4d54ab6f209749a99556, type: 3}
+  - {fileID: 21300000, guid: 0848a116f72033a42a03161d5fabb6c9, type: 3}
+  - {fileID: 21300000, guid: 388aee923d48a9147aac75aff5d92cce, type: 3}
+  - {fileID: 21300000, guid: ec6c434442f8e93489bc56374e71cc67, type: 3}
+  - {fileID: 21300000, guid: 41f06048067a05740bd7d2c5d7ae3913, type: 3}
+  - {fileID: 21300000, guid: a72b576733257a449947bb4f9ef23721, type: 3}
+  - {fileID: 21300000, guid: 6337dc0e16782d740a4f951e1c416ea8, type: 3}
+  walkSourceHeight: 184
+  runSourceHeight: 184
+  walkCycle: 3
+  runCycle: 3.75
+  jumpTakeoff: 0
+  jumpRise: 1
+  jumpApex: 2
+  jumpFall: 3
+  crouchFrame: 0
+  crouchSlideFrame: -1
+  idleFps: 2
+  land:
+  - {fileID: 21300000, guid: 683e04425dc2f0c4890c0cd6aaa2e385, type: 3}
+  attack:
+  - {fileID: 21300000, guid: cbde41e6f9cf9cf4da2b4fe6f928711e, type: 3}
+  - {fileID: 21300000, guid: b73ddc8e0a387da49a175b98dd3fbc35, type: 3}
+  - {fileID: 21300000, guid: 5146d7d7c1674854a932df6d62d3f4a0, type: 3}
+  - {fileID: 21300000, guid: 0c7d7922880999344b8a2aa665f48605, type: 3}
+  hurt:
+  - {fileID: 21300000, guid: 5a8607408c6d0084091b90494d724d34, type: 3}
+  - {fileID: 21300000, guid: 80e9d79edd2373e40b38ba70dba9eff1, type: 3}
+  - {fileID: 21300000, guid: 587c785d15ecd1a43b4bade6d50a5b5c, type: 3}
+  - {fileID: 21300000, guid: cb72f3654b46a7d4985b28192ebe4437, type: 3}
+  - {fileID: 21300000, guid: 24985dc30c24cf2468c9a90dc1b9fca8, type: 3}
+  - {fileID: 21300000, guid: 78948c524bc6a004f8b40746524a48f2, type: 3}
+  - {fileID: 21300000, guid: c0a5994b01a2bfe4e877a60058d31fd2, type: 3}
+  - {fileID: 21300000, guid: 5e20762b1b7b01b48bc2ae524c1d6c24, type: 3}
+  death:
+  - {fileID: 21300000, guid: d5ca256f5a160114e87ec37076e847d4, type: 3}
+  - {fileID: 21300000, guid: 94d93f15b8bafe44e942ee7de3628cd7, type: 3}
+  - {fileID: 21300000, guid: fa3516f9985a14b4f980292a960d423b, type: 3}
+  - {fileID: 21300000, guid: a780369d654be4f489bc6daae7ed7683, type: 3}
+  - {fileID: 21300000, guid: e05d6b9b9476b054e98adeeb466ea0b3, type: 3}
+  - {fileID: 21300000, guid: 7e2b74df528c6d4428591fc98eca900b, type: 3}
+  - {fileID: 21300000, guid: 68b7d84776c5f8e46aef63e635071dd3, type: 3}
