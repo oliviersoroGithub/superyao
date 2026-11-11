@@ -61,6 +61,14 @@ namespace SuperYao
                     if (gnambro.FireHit()) { Stop(); return; }
                     continue;
                 }
+                var caiman = c.GetComponentInParent<CaimanBoss>();
+                if (caiman != null)
+                {
+                    if (caiman.FireHit()) { Stop(); return; }
+                    continue;
+                }
+                var boulder = c.GetComponentInParent<Boulder>();
+                if (boulder != null) { boulder.Break(); Stop(); return; } // la pierre qui roule éclate
                 var enemy = c.GetComponentInParent<Enemy>();
                 if (enemy != null)
                 {

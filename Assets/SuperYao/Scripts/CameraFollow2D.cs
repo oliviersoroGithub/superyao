@@ -106,6 +106,8 @@ namespace SuperYao
             float baseY = bottomY + cam.orthographicSize;
             // Hauteur de référence : le dernier sol touché ; un saut ordinaire ne fait donc pas bouger la caméra.
             float groundY = hero != null ? hero.LastGroundY : target.position.y;
+            // Sous l'eau (stage 7), elle descend avec le nageur pour montrer le fond du lac.
+            if (hero != null && hero.Swimming) groundY = Mathf.Min(groundY, target.position.y - 3f);
             // Elle descend avec le sol s'il passe sous le niveau de départ (descentes), monte s'il grimpe nettement.
             if (followAltitude)
                 return new Vector2(ClampX(x), Mathf.Max(baseY + Mathf.Min(0f, groundY), target.position.y + cam.orthographicSize * 0.15f));

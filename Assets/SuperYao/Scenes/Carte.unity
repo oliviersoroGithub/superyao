@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &319563702
+--- !u!1 &196141482
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,9 +127,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 319563705}
-  - component: {fileID: 319563704}
-  - component: {fileID: 319563703}
+  - component: {fileID: 196141485}
+  - component: {fileID: 196141484}
+  - component: {fileID: 196141483}
   m_Layer: 0
   m_Name: Carte
   m_TagString: Untagged
@@ -137,13 +137,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &319563703
+--- !u!114 &196141483
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 319563702}
+  m_GameObject: {fileID: 196141482}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78cf1dad615319b478e74188cbda50c7, type: 3}
@@ -155,16 +155,18 @@ MonoBehaviour:
   banana: {fileID: 21300000, guid: 38c7ee909887dd94a9f119af08ddf98c, type: 3}
   shea: {fileID: 21300000, guid: a59c11e81a53f6341af79d2cb2240e32, type: 3}
   fireOrb: {fileID: 21300000, guid: 380f8cdfcd18a86488df20ca7153638f, type: 3}
+  coin: {fileID: 21300000, guid: a654851c93dff5c46973525f0b29f3b1, type: 3}
+  diamond: {fileID: 21300000, guid: 9208390b127646d4b8252d0ccb8b5fa5, type: 3}
   coinSound: {fileID: 8300000, guid: 6910598bb127ce9459737c332ab1290e, type: 3}
   lifeSound: {fileID: 8300000, guid: d3f1618be8bcba54a801250a200636b3, type: 3}
   powerSound: {fileID: 8300000, guid: 29185861d5ee0c34cbe0d0beb5a15997, type: 3}
---- !u!114 &319563704
+--- !u!114 &196141484
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 319563702}
+  m_GameObject: {fileID: 196141482}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4dbd7a5eea079849b2563357b35f70d, type: 3}
@@ -181,13 +183,13 @@ MonoBehaviour:
   soundOn: {fileID: 21300000, guid: 6a4c91f936909fe449c350232b3a1db2, type: 3}
   soundOff: {fileID: 21300000, guid: 657627960477d604eabe774b325f6934, type: 3}
   home: {fileID: 21300000, guid: 2e0796ea022c4fa4bb19975004ee14ee, type: 3}
---- !u!4 &319563705
+--- !u!4 &196141485
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 319563702}
+  m_GameObject: {fileID: 196141482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -196,7 +198,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1566898233
+--- !u!1 &729165957
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -204,9 +206,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1566898236}
-  - component: {fileID: 1566898235}
-  - component: {fileID: 1566898234}
+  - component: {fileID: 729165960}
+  - component: {fileID: 729165959}
+  - component: {fileID: 729165958}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -214,21 +216,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1566898234
+--- !u!81 &729165958
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566898233}
+  m_GameObject: {fileID: 729165957}
   m_Enabled: 1
---- !u!20 &1566898235
+--- !u!20 &729165959
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566898233}
+  m_GameObject: {fileID: 729165957}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
@@ -273,13 +275,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1566898236
+--- !u!4 &729165960
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566898233}
+  m_GameObject: {fileID: 729165957}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -292,5 +294,5 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1566898236}
-  - {fileID: 319563705}
+  - {fileID: 729165960}
+  - {fileID: 196141485}

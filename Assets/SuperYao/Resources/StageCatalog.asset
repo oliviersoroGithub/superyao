@@ -72,33 +72,33 @@ MonoBehaviour:
     bananas: 19
     diamonds: 2
   - name: Yamoussoukro
-    tagline: 
-    scene: 
-    thumbnail: {fileID: 0}
+    tagline: "Bienvenue dans la capitale ! Nage dans les lacs de Yamoussoukro, gare-toi des ca\xEFmans du palais et grimpe jusqu'\xE0 la basilique !"
+    scene: Stage07_Yamoussoukro
+    thumbnail: {fileID: 21300000, guid: 0eddf694e3f121041921c015458236e8, type: 3}
     mapPosition: {x: 691, y: 470}
     via: []
-    coins: 0
-    bananas: 0
-    diamonds: 0
+    coins: 101
+    bananas: 21
+    diamonds: 1
   - name: "La for\xEAt sacr\xE9e"
-    tagline: 
-    scene: 
-    thumbnail: {fileID: 0}
+    tagline: "Entre dans la for\xEAt sacr\xE9e au coucher du soleil : saute de caisse en caisse au-dessus des marigots\u2026 le vieux ca\xEFman sacr\xE9 garde le bassin !"
+    scene: Stage08_ForetSacree
+    thumbnail: {fileID: 21300000, guid: 9e929797fa47f3543b774b4e64912a2b, type: 3}
     mapPosition: {x: 470, y: 545}
     via: []
-    coins: 0
-    bananas: 0
-    diamonds: 0
+    coins: 62
+    bananas: 8
+    diamonds: 1
   - name: "Ta\xEF"
-    tagline: 
-    scene: 
-    thumbnail: {fileID: 0}
+    tagline: "Plonge dans la for\xEAt de Ta\xEF : les chimpanz\xE9s y cassent des noix\u2026 et te les lancent depuis les branches !"
+    scene: Stage09_Tai
+    thumbnail: {fileID: 21300000, guid: 538aa6c981feffa4db5b36af707ada47, type: 3}
     mapPosition: {x: 244, y: 683}
     via:
     - {x: 340, y: 700}
-    coins: 0
-    bananas: 0
-    diamonds: 0
+    coins: 77
+    bananas: 15
+    diamonds: 1
   - name: Man
     tagline: 
     scene: 

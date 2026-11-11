@@ -13,7 +13,12 @@ namespace SuperYao
     /// - gbaka et charrette (stage 5) : ils roulent lentement et foncent quand Yao est devant eux, à la même hauteur ;
     ///   un saut (ou une boule de feu) les sonne un moment, il en faut 3 pour le gbaka (il est éjecté en tournoyant, comme
     ///   sur le téléphone), 2 pour la charrette ;
-    /// - singe (stage 6) : il marche (au sol ou sur une branche) et lance des noix de coco en cloche quand Yao passe à portée.
+    /// - singe (stage 6) : il marche (au sol ou sur une branche) et lance des noix de coco en cloche quand Yao passe à portée ;
+    /// - chimpanzé (stage 9) : comme le singe, il lance des noix (il les casse d'abord avec une pierre) ; hippopotame nain
+    ///   (stage 9) : il fonce sur Yao comme le gbaka, il faut deux coups ;
+    /// - poisson-chat, poisson-tigre et caïman (stage 7, dans les lacs) : le poisson-chat patrouille, le poisson-tigre fonce
+    ///   sur Yao qui nage ; le caïman nage en surface, bondit hors de l'eau sur Yao qui passe au-dessus (pirogue) et le
+    ///   poursuit sous l'eau ; il faut deux coups.
     /// Ils ne s'éveillent qu'à l'approche de la caméra. Sauter dessus les écrase (le héros rebondit, plus haut s'il
     /// garde le bouton de saut enfoncé) ; les toucher autrement blesse le héros.
     /// Vitesses du téléphone converties (1 px/image = 3,75 cases/s).
@@ -21,11 +26,13 @@ namespace SuperYao
     [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D), typeof(Rigidbody2D))]
     public class Enemy : MonoBehaviour
     {
-        public enum Kind { Crab, Turtle, Gull, Taxi, Agama, Vulture, Gbaka, Cart, Monkey }
+        public enum Kind { Crab, Turtle, Gull, Taxi, Agama, Vulture, Gbaka, Cart, Monkey, Catfish, Tigerfish, Caiman, Chimp, Hippo }
         /// <summary>Gbaka et charrette : ils foncent sur Yao quand il est devant eux, et encaissent plusieurs coups.</summary>
-        bool IsCharger => kind == Kind.Gbaka || kind == Kind.Cart;
+        bool IsCharger => kind == Kind.Gbaka || kind == Kind.Cart || kind == Kind.Hippo;
         /// <summary>Mouette et vautour volent (allers-retours en ondulant).</summary>
         bool IsFlyer => kind == Kind.Gull || kind == Kind.Vulture;
+        /// <summary>Poissons et caïman : ils restent dans leur lac.</summary>
+        bool IsSwimmer => kind == Kind.Catfish || kind == Kind.Tigerfish || kind == Kind.Caiman;
 
         public Kind kind;
         public Sprite[] walkFrames;
@@ -59,6 +66,8 @@ namespace SuperYao
         // d'attente. Les singes perchés visent aussi Yao en contrebas (7 cases).
         const float ThrowTime = 0.5f, ThrowRelease = 0.3f, ThrowCooldown = 2f, ThrowRange = 10.6f, ThrowHeight = 7f, CoconutUp = 18f;
         float throwTime = -1f, throwCooldown = 0.8f;
+        [Tooltip("Taille de la noix lancée (cases) : noix de coco du singe, petite noix cassée du chimpanzé.")]
+        public float nutSize = 0.55f;
         bool thrown;
         bool charging;
         static HeroController heroCache;
@@ -84,7 +93,7 @@ namespace SuperYao
             basePos = transform.position;
             vx = -speed; // ils partent vers le héros
             // Petite ombre au sol, de la largeur de l'ennemi.
-            if (GetComponent<GroundShadow>() == null)
+            if (GetComponent<GroundShadow>() == null && !IsSwimmer)
             {
                 var sh = gameObject.AddComponent<GroundShadow>();
                 sh.width = Mathf.Clamp(box.size.x * Mathf.Abs(transform.lossyScale.x) * 0.85f, 0.6f, 3f);
@@ -123,7 +132,8 @@ namespace SuperYao
                 }
                 LookForHero(dt);
             }
-            if (kind == Kind.Monkey && MonkeyThrow(dt)) return;
+            if ((kind == Kind.Monkey || kind == Kind.Chimp) && MonkeyThrow(dt)) return;
+            if (IsSwimmer) { Swim(dt); return; }
             if (IsFlyer) Fly(dt); else Walk(dt);
             if (kind == Kind.Taxi && turnTime > 0f && turnFrames != null && turnFrames.Length > 0)
                 sr.sprite = turnFrames[Mathf.Min(turnFrames.Length - 1, Mathf.FloorToInt((TaxiTurnTime - turnTime) / TaxiTurnTime * turnFrames.Length))];
@@ -153,7 +163,7 @@ namespace SuperYao
                     // Fin de la charge contre un obstacle ou au bord : le gbaka qui percute reste sonné.
                     charging = false;
                     chargeCooldown = 1.2f;
-                    if (wall && kind == Kind.Gbaka) { dizzy = 1f; SoundFx.Play("bump"); }
+                    if (wall && (kind == Kind.Gbaka || kind == Kind.Hippo)) { dizzy = 1f; SoundFx.Play("bump"); }
                 }
                 return;
             }
@@ -244,13 +254,138 @@ namespace SuperYao
             image.sharedMaterial = sr.sharedMaterial;
             image.sortingLayerID = sr.sortingLayerID;
             image.sortingOrder = sr.sortingOrder + 1;
-            float s = 0.55f / coconutFrames[0].bounds.size.y;
+            float s = nutSize / coconutFrames[0].bounds.size.y;
             image.transform.localScale = new Vector3(s, s, 1f);
-            image.transform.localPosition = new Vector3(0f, -0.275f, 0f);
+            image.transform.localPosition = new Vector3(0f, -nutSize / 2f, 0f);
             var nut = go.AddComponent<Coconut>();
             nut.frames = coconutFrames;
             nut.velocity = new Vector2(vxc, CoconutUp);
             SoundFx.Play("jump");
+        }
+
+        // ------------------------------------------------------------------ poissons et caïmans (stage 7)
+
+        [Header("Poissons et caïmans")]
+        [Tooltip("Caïman : sortie de l'eau (3 images) et bond / nage sous l'eau (images d'attaque).")]
+        public Sprite[] lungeFrames;
+        // Poisson-tigre : il repère Yao qui nage (portée « sight », 2 cases de haut) et fonce 1,2 s vers lui.
+        // Caïman : bond hors de l'eau quand Yao passe au-dessus (2,6 cases de côté), poursuite sous l'eau (6 cases).
+        const float DashTime = 1.2f, DashCooldown = 1.6f, LungeUp = 17f, LungeGravity = 40f, LungeReach = 2.6f, ChaseRange = 6f, ChaseSpeed = 3.2f;
+        SwimWater lake;
+        float dashTime, lungeTime = -1f, lungeVy, stunned;
+        Vector2 dashDir;
+
+        void Swim(float dt)
+        {
+            if (lake == null) lake = SwimWater.At((Vector2)basePos + Vector2.up * (kind == Kind.Caiman ? -0.3f : 0.3f)); // le caïman est posé à la surface
+            if (heroCache == null) heroCache = FindAnyObjectByType<HeroController>();
+            var hero = heroCache;
+            var p = (Vector2)transform.position;
+            Vector2 toHero = hero != null ? (Vector2)hero.transform.position + Vector2.up * 0.4f - p : Vector2.zero;
+            bool heroInLake = hero != null && hero.Swimming && lake != null && SwimWater.At(hero.transform.position + Vector3.up * 0.3f) == lake;
+            if (stunned > 0f) stunned -= dt;
+            if (chargeCooldown > 0f) chargeCooldown -= dt;
+            Sprite[] frames = walkFrames;
+            float fps = 8f;
+
+            if (kind == Kind.Caiman)
+            {
+                float surfaceY = lake != null ? lake.SurfaceY : basePos.y;
+                float floatY = surfaceY - 0.6f; // la ligne d'eau des images de nage est à 0,6 case du bas
+                if (lungeTime >= 0f)
+                {
+                    // Bond hors de l'eau : il sort (3 images), saute gueule ouverte, retombe dans l'eau.
+                    lungeTime += dt;
+                    if (lungeTime > 0.2f)
+                    {
+                        lungeVy -= LungeGravity * dt;
+                        p.y += lungeVy * dt;
+                        frames = lungeFrames != null && lungeFrames.Length > 3 ? new[] { lungeFrames[3 + Mathf.Min(2, Mathf.FloorToInt((lungeTime - 0.2f) * 6f))] } : walkFrames;
+                        if (p.y <= floatY && lungeVy < 0f) { p.y = floatY; lungeTime = -1f; chargeCooldown = 1.2f; }
+                    }
+                    else frames = lungeFrames != null && lungeFrames.Length >= 3 ? new[] { lungeFrames[Mathf.Min(2, Mathf.FloorToInt(lungeTime / 0.2f * 3f))] } : walkFrames;
+                    transform.position = p;
+                    SetSwimSprite(frames, 12f);
+                    return;
+                }
+                if (stunned <= 0f && heroInLake && toHero.magnitude < ChaseRange)
+                {
+                    // Yao nage près de lui : il plonge et le poursuit (images d'attaque, de côté).
+                    var step = toHero.normalized * ChaseSpeed * dt;
+                    p += step;
+                    if (Mathf.Abs(step.x) > 0.001f) vx = Mathf.Sign(step.x) * Mathf.Abs(vx);
+                    frames = chargeFrames;
+                    fps = 9f;
+                }
+                else
+                {
+                    // En surface : il patrouille et guette Yao qui passe au-dessus de l'eau.
+                    p.x += (stunned > 0f ? 0f : vx) * dt;
+                    if (Mathf.Abs(p.x - basePos.x) > flyRange) { p.x = basePos.x + Mathf.Sign(p.x - basePos.x) * flyRange; vx = -vx; }
+                    p.y = Mathf.MoveTowards(p.y, floatY, 3f * dt);
+                    if (hero != null && !hero.Swimming && !hero.IsDying && chargeCooldown <= 0f && stunned <= 0f && Mathf.Abs(p.y - floatY) < 0.1f
+                        && Mathf.Abs(toHero.x) < LungeReach && hero.transform.position.y > surfaceY - 0.2f && hero.transform.position.y < surfaceY + 6f)
+                    {
+                        lungeTime = 0f;
+                        lungeVy = LungeUp;
+                        vx = Mathf.Sign(toHero.x) * Mathf.Abs(vx);
+                        SoundFx.Play("bump");
+                    }
+                }
+            }
+            else
+            {
+                if (kind == Kind.Tigerfish && dashTime <= 0f && chargeCooldown <= 0f && heroInLake
+                    && Mathf.Abs(toHero.x) < sight && Mathf.Abs(toHero.y) < 2.5f)
+                {
+                    dashTime = DashTime;
+                    dashDir = toHero.normalized;
+                    vx = Mathf.Sign(toHero.x) * Mathf.Abs(vx);
+                    SoundFx.Play("bump");
+                }
+                if (dashTime > 0f)
+                {
+                    // Le poisson-tigre fonce, gueule ouverte.
+                    dashTime -= dt;
+                    p += dashDir * chargeSpeed * dt;
+                    if (dashTime <= 0f) { chargeCooldown = DashCooldown; basePos = new Vector2(basePos.x, p.y); }
+                    frames = chargeFrames != null && chargeFrames.Length > 0 ? chargeFrames : walkFrames;
+                    fps = 14f;
+                }
+                else
+                {
+                    // Patrouille en ondulant ; il revient peu à peu à sa profondeur.
+                    p.x += vx * dt;
+                    if (Mathf.Abs(p.x - basePos.x) > flyRange) { p.x = basePos.x + Mathf.Sign(p.x - basePos.x) * flyRange; vx = -vx; }
+                    p.y = Mathf.MoveTowards(p.y, basePos.y + Mathf.Sin(time * 2f) * flyBob, 1.5f * dt);
+                }
+            }
+            // Il reste dans son lac.
+            if (lake != null)
+            {
+                float halfW = box.size.x * Mathf.Abs(transform.lossyScale.x) / 2f, h = box.size.y * Mathf.Abs(transform.lossyScale.y);
+                p.x = Mathf.Clamp(p.x, lake.MinX + halfW, lake.MaxX - halfW);
+                p.y = Mathf.Clamp(p.y, lake.BottomY + 0.1f, kind == Kind.Caiman ? lake.SurfaceY : lake.SurfaceY - h - 0.1f);
+            }
+            transform.position = p;
+            SetSwimSprite(frames, fps);
+        }
+
+        void SetSwimSprite(Sprite[] frames, float fps)
+        {
+            if (stunned > 0f && hitFrames != null && hitFrames.Length > 0) frames = hitFrames;
+            if (frames != null && frames.Length > 0) sr.sprite = frames[Mathf.FloorToInt(time * fps) % frames.Length];
+            sr.flipX = facesRight ? vx < 0f : vx > 0f;
+        }
+
+        /// <summary>Caïman touché sans être vaincu : sonné un moment (il ne mord pas pendant ce temps).</summary>
+        void SwimmerHit()
+        {
+            hp--;
+            stunned = 0.8f;
+            stompGuard = 0.4f;
+            lungeTime = -1f;
+            SoundFx.Play("bump");
         }
 
         bool Blocked(Vector2 origin, Vector2 direction, float distance)
@@ -284,9 +419,10 @@ namespace SuperYao
         public bool Knock(int direction)
         {
             if (dead || !awake) return false;
+            if (kind == Kind.Caiman && hp > 1) { SwimmerHit(); return true; }
             if (IsCharger && hp > 1) { Hit(); return true; }
             if (kind == Kind.Taxi) { StageState.Instance?.AddKnock(); Explode(); return true; }
-            if (kind == Kind.Gbaka) { StageState.Instance?.AddKnock(); SpinOut(direction); return true; }
+            if (kind == Kind.Gbaka || kind == Kind.Hippo) { StageState.Instance?.AddKnock(); SpinOut(direction); return true; }
             dead = knocked = true;
             deadTime = 0f;
             box.enabled = false;
@@ -337,9 +473,10 @@ namespace SuperYao
 
         void Stomp()
         {
+            if (kind == Kind.Caiman && hp > 1) { SwimmerHit(); return; }
             if (IsCharger && hp > 1) { Hit(); return; }
             if (kind == Kind.Taxi) { StageState.Instance?.AddStomp(); Explode(); return; }
-            if (kind == Kind.Gbaka) { StageState.Instance?.AddStomp(); SpinOut(vx > 0f ? -1 : 1); return; }
+            if (kind == Kind.Gbaka || kind == Kind.Hippo) { StageState.Instance?.AddStomp(); SpinOut(vx > 0f ? -1 : 1); return; }
             dead = true;
             deadTime = 0f;
             box.enabled = false;
@@ -364,6 +501,16 @@ namespace SuperYao
                 transform.position += new Vector3(knockDirection * 2f * dt, -fallSpeed * dt, 0f);
                 if (spinning) transform.Rotate(0f, 0f, 360f * dt * -knockDirection);
                 if (deadTime > 2f) gameObject.SetActive(false);
+            }
+            else if (IsSwimmer)
+            {
+                // Vaincu dans l'eau : il remonte le ventre en l'air et s'efface.
+                sr.flipY = true;
+                transform.position += Vector3.up * (1.2f * dt);
+                var c = sr.color;
+                c.a = Mathf.Clamp01(1f - (deadTime - 0.8f) / 0.7f);
+                sr.color = c;
+                if (deadTime > 1.5f) gameObject.SetActive(false);
             }
             else if (IsFlyer)
             {

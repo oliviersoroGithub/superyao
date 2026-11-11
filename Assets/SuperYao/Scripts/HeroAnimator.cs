@@ -26,6 +26,10 @@ namespace SuperYao
         public Sprite[] hang, climb;
         [Tooltip("Hauteur, sur ces planches, de Yao debout (px), et hauteur des poings au-dessus du bas de l'image de la liane (px).")]
         public float hangSourceHeight = 395f, climbSourceHeight = 500f, hangGripPx = 373f;
+        [Tooltip("Yao qui nage (brasse) et qui fait du surplace dans l'eau (stage 7), et la hauteur de Yao debout sur ces planches.")]
+        public Sprite[] swim, tread;
+        public float swimSourceHeight = 300f, treadSourceHeight = 539f;
+        float swimPhase;
 
         /// <summary>Hauteur des mains de Yao pendu, au-dessus du bas de l'image (cases) : la liane les tient là.</summary>
         public float HangHandHeight => controller == null ? 1.2f
@@ -100,7 +104,23 @@ namespace SuperYao
             Sprite pose;
             float source = hero.sourceHeight;
             bool back = false;
-            if (controller.Hanging != null)
+            if (controller.Swimming && swim != null && swim.Length > 0)
+            {
+                // Nage : la brasse défile quand il avance ou vient de donner un coup de bras ; sinon il fait du surplace.
+                bool moving = Mathf.Abs(v.x) > 0.8f || controller.StrokeTime < 0.5f;
+                if (moving || tread == null || tread.Length == 0)
+                {
+                    swimPhase += dt * (controller.StrokeTime < 0.5f ? 14f : 9f);
+                    pose = swim[Mathf.FloorToInt(swimPhase) % swim.Length];
+                    source = swimSourceHeight;
+                }
+                else
+                {
+                    pose = tread[Mathf.FloorToInt(time * 6f) % tread.Length];
+                    source = treadSourceHeight;
+                }
+            }
+            else if (controller.Hanging != null)
             {
                 // Pendu à la liane : les jambes se balancent.
                 if (hang != null && hang.Length > 0) { pose = hang[Mathf.FloorToInt(time * 7f) % hang.Length]; source = hangSourceHeight; }

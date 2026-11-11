@@ -78,6 +78,92 @@ namespace SuperYao
             }
         }
 
+        // ------------------------------------------------------------------ nage (stage 7)
+
+        /// <summary>Yao nage (dans un lac, sous la surface).</summary>
+        public bool Swimming { get; private set; }
+        /// <summary>Temps depuis la dernière brasse (pour l'animation).</summary>
+        public float StrokeTime { get; private set; } = 99f;
+        SwimWater nearWater;
+        float leapGrace;
+        // Brasse (bouton de saut) ; il coule doucement sans rien faire, moins vite en gardant le bouton ; ▼ plonge.
+        // Bond hors de l'eau quand la tête est à la surface (pour remonter sur la berge).
+        const float SwimEnterDepth = 0.6f, SwimSpeed = 4.8f, SwimAccel = 14f, SwimDrag = 6f;
+        const float Stroke = 6.5f, SwimRiseMax = 7.5f, Sink = 7f, SinkHeld = 3.5f, SinkMax = 3.2f, Dive = 14f, DiveMax = 6f, Leap = 24f;
+        const float SwimWidth = 1.3f, SwimHeight = 0.85f;
+
+        /// <summary>Appelé par un lac tant que le héros est dedans.</summary>
+        public void InWater(SwimWater w) => nearWater = w;
+
+        void SetSwimming(bool on)
+        {
+            if (on == Swimming) return;
+            Swimming = on;
+            if (on)
+            {
+                if (Crouching) { Crouching = false; }
+                Climbing = false;
+                body.gravityScale = 0f;
+                SetBoxSize(SwimWidth, SwimHeight);
+                var v = body.linearVelocity;
+                body.linearVelocity = new Vector2(v.x * 0.5f, Mathf.Max(v.y * 0.3f, -SinkMax)); // le plongeon est freiné
+                SoundFx.Play("bump");
+            }
+            else
+            {
+                body.gravityScale = 1f;
+                SetBox(standHeight);
+            }
+        }
+
+        void StepSwimming(float dt, SwimWater water, bool won)
+        {
+            int dir = won ? 0 : input.Horizontal > 0.3f ? 1 : input.Horizontal < -0.3f ? -1 : 0;
+            if (dir != 0) Facing = dir;
+            var v = body.linearVelocity;
+            // Le courant de la rivière (stage 9) l'emporte : il nage par rapport à l'eau.
+            float vx = Mathf.MoveTowards(v.x, dir * SwimSpeed + water.current, (dir != 0 ? SwimAccel : SwimDrag) * dt);
+            float vy = v.y;
+            float head = body.position.y + SwimHeight;
+            bool atSurface = head > water.SurfaceY - 0.25f;
+            StrokeTime += dt;
+            Grounded = false;
+            AirTime = 0f;
+            carried = 0f;
+            buffer = 0f;
+            if (input.ConsumeJumpPressed() && !won)
+            {
+                if (atSurface)
+                {
+                    // Bond hors de l'eau.
+                    SetSwimming(false);
+                    leapGrace = 0.35f;
+                    body.linearVelocity = new Vector2(vx, Leap);
+                    cutJump = false;
+                    JumpedForward = Mathf.Abs(vx) > 0.5f;
+                    SoundFx.Play("jump");
+                    Jumped?.Invoke();
+                    return;
+                }
+                vy = Mathf.Max(vy, 0f) + Stroke;
+                StrokeTime = 0f;
+            }
+            vy -= (input.JumpHeld ? SinkHeld : Sink) * dt;
+            if (input.Down && !won) vy -= Dive * dt;
+            vy = Mathf.Clamp(vy, input.Down ? -DiveMax : -SinkMax, SwimRiseMax);
+            // Il ne sort pas de l'eau sans bondir : la tête reste à fleur d'eau.
+            if (head > water.SurfaceY + 0.15f && vy > 0f) vy = 0f;
+            body.gravityScale = 0f;
+            body.linearVelocity = new Vector2(vx, vy);
+        }
+
+        void SetBoxSize(float w, float h)
+        {
+            box.edgeRadius = EdgeRadius;
+            box.size = new Vector2(w - 2f * EdgeRadius, h - 2f * EdgeRadius);
+            box.offset = new Vector2(0f, h / 2f);
+        }
+
         /// <summary>Appelé par une échelle tant que le héros la touche.</summary>
         public void InClimbable(Climbable c) => nearLadder = c;
 
@@ -196,6 +282,14 @@ namespace SuperYao
             PreviousVelocityY = v.y;
             grabCooldown -= dt;
             if (Hanging != null) { StepHanging(dt, won); return; }
+            // Nage (stage 7) : dans un lac, les pieds assez loin sous la surface.
+            var water = nearWater;
+            nearWater = null;
+            leapGrace -= dt;
+            bool deep = water != null && leapGrace <= 0f && body.position.y < water.SurfaceY - SwimEnterDepth;
+            if (deep && !Swimming) SetSwimming(true);
+            else if (Swimming && (water == null || body.position.y > water.SurfaceY - SwimEnterDepth * 0.5f)) SetSwimming(false);
+            if (Swimming) { StepSwimming(dt, water, won); return; }
             var ladder = nearLadder;
             nearLadder = null;
 
@@ -450,6 +544,7 @@ namespace SuperYao
         public void Launch(float speed, float heldSpeed)
         {
             if (IsDying) return;
+            if (Swimming) { SetSwimming(false); leapGrace = 0.4f; } // un jet d'eau le sort du lac
             var v = body.linearVelocity;
             v.y = input.JumpHeld ? heldSpeed : speed;
             body.linearVelocity = v;
@@ -489,6 +584,7 @@ namespace SuperYao
             string cause = fromPit ? "tombé dans l'eau" : state != null && state.TimeLeft <= 0 ? "temps écoulé" : "touché par un ennemi";
             Debug.Log($"Super Yao : mort ({cause}) en x = {transform.position.x:0.0}, y = {transform.position.y:0.0}, temps restant {(state != null ? state.TimeLeft : -1)}.");
             IsDying = true;
+            if (Swimming) { Swimming = false; SetBox(standHeight); }
             if (Hanging != null) { Hanging.Release(); Hanging = null; }
             Climbing = false;
             dyingTime = fromPit ? DeathPause : 0f;

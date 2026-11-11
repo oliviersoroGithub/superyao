@@ -282,6 +282,106 @@ namespace SuperYao.EditorTools
                 vulture.flyBob = 0.8f;
                 return;
             }
+            if (kind == SuperYao.Enemy.Kind.Catfish || kind == SuperYao.Enemy.Kind.Tigerfish)
+            {
+                // Poissons des lacs (planches de l'utilisateur : 6 poses de nage, la 7e = touché) : (x, y) = bas du poisson.
+                bool tiger = kind == SuperYao.Enemy.Kind.Tigerfish;
+                var fishFrames = LoadSprites($"{GameplayDir}Enemies/{(tiger ? "tigerfish" : "catfish")}_", 7);
+                sr = Renderer(parent, enemyName, fishFrames[0], 4, tiger ? 1.5f : 1.7f, false);
+                sr.transform.localPosition = new Vector3(x, y, 0f);
+                float sf = sr.transform.localScale.x;
+                box = sr.gameObject.AddComponent<BoxCollider2D>();
+                box.size = new Vector2((tiger ? 1.1f : 1.25f) / sf, 0.45f / sf);
+                box.offset = new Vector2(0.1f / sf, fishFrames[0].bounds.size.y / 2f);
+                sr.gameObject.AddComponent<Rigidbody2D>();
+                var fish = sr.gameObject.AddComponent<SuperYao.Enemy>();
+                fish.kind = kind;
+                fish.walkFrames = fishFrames.Take(6).ToArray();
+                fish.chargeFrames = tiger ? new[] { fishFrames[6], fishFrames[2] } : null;
+                fish.squashedSprite = fishFrames[6];
+                fish.facesRight = true;
+                fish.speed = tiger ? 1.8f : 1.3f;
+                fish.flyRange = tiger ? 3f : 4f;
+                fish.flyBob = 0.3f;
+                fish.chargeSpeed = 8f;
+                fish.sight = 7f;
+                return;
+            }
+            if (kind == SuperYao.Enemy.Kind.Caiman)
+            {
+                // Caïman (images du téléphone, même échelle pour toutes : 2,6 cases pour les 161 px de la nage) : (x, y) =
+                // bas de l'image ; il se met lui-même à fleur d'eau.
+                const float unit = 2.6f / 161f;
+                var swim = LoadSprites($"{GameplayDir}Enemies/croc_swim_", 4);
+                sr = Renderer(parent, enemyName, swim[0], 4, swim[0].rect.height * unit);
+                sr.transform.localPosition = new Vector3(x, y, 0f);
+                float sc2 = sr.transform.localScale.x;
+                box = sr.gameObject.AddComponent<BoxCollider2D>();
+                box.size = new Vector2(2.1f / sc2, 0.8f / sc2);
+                box.offset = new Vector2(0.1f / sc2, 0.55f / sc2);
+                sr.gameObject.AddComponent<Rigidbody2D>();
+                var croc = sr.gameObject.AddComponent<SuperYao.Enemy>();
+                croc.kind = kind;
+                croc.walkFrames = swim;
+                var appear = LoadSprites($"{GameplayDir}Enemies/croc_appear_", 3);
+                var attack = LoadSprites($"{GameplayDir}Enemies/croc_attack_", 6);
+                croc.lungeFrames = new[] { appear[0], appear[1], appear[2], attack[1], attack[2], attack[3] };
+                croc.chargeFrames = new[] { attack[0], attack[5] };
+                croc.hitFrames = LoadSprites($"{GameplayDir}Enemies/croc_hit_", 3);
+                croc.squashedSprite = LoadSprite($"{GameplayDir}Enemies/croc_death_1.png");
+                croc.facesRight = true;
+                croc.hp = 1; // un saut suffit (avec 2, le premier saut ne faisait que le sonner : on croyait le saut sans effet)
+                croc.speed = 1.4f;
+                croc.flyRange = 5f;
+                return;
+            }
+            if (kind == SuperYao.Enemy.Kind.Chimp)
+            {
+                // Chimpanzé (planches de l'utilisateur : 6 poses de marche, 6 de lancer — il casse une noix avec une pierre
+                // et la lance —, une pose « touché ») : 1,9 case de haut, il lance de petites noix.
+                var walk = LoadSprites($"{GameplayDir}Enemies/chimp_walk_", 6);
+                sr = Renderer(parent, enemyName, walk[0], 4, 1.9f);
+                sr.transform.localPosition = new Vector3(x, y, 0f);
+                float sch = sr.transform.localScale.x;
+                box = sr.gameObject.AddComponent<BoxCollider2D>();
+                box.size = new Vector2(1.2f / sch, 1.3f / sch);
+                box.offset = new Vector2(0f, 0.65f / sch);
+                sr.gameObject.AddComponent<Rigidbody2D>();
+                var chimp = sr.gameObject.AddComponent<SuperYao.Enemy>();
+                chimp.kind = kind;
+                chimp.walkFrames = walk;
+                chimp.throwFrames = LoadSprites($"{GameplayDir}Enemies/chimp_throw_", 6);
+                chimp.coconutFrames = LoadSprites($"{GameplayDir}Enemies/coconut_", 4);
+                chimp.nutSize = 0.4f;
+                chimp.squashedSprite = LoadSprite($"{GameplayDir}Enemies/chimp_hit.png");
+                chimp.facesRight = true;
+                chimp.speed = 0.5f * 3.75f;
+                return;
+            }
+            if (kind == SuperYao.Enemy.Kind.Hippo)
+            {
+                // Hippopotame nain (planches de l'utilisateur : 6 poses de marche, une pose « touché ») : 1,5 case de haut ;
+                // il fonce sur Yao quand il le voit devant lui (comme le gbaka) ; deux coups, puis il est éjecté.
+                var walk = LoadSprites($"{GameplayDir}Enemies/hippo_walk_", 6);
+                sr = Renderer(parent, enemyName, walk[0], 4, 1.5f);
+                sr.transform.localPosition = new Vector3(x, y, 0f);
+                float shp = sr.transform.localScale.x;
+                box = sr.gameObject.AddComponent<BoxCollider2D>();
+                box.size = new Vector2(2.3f / shp, 1.1f / shp);
+                box.offset = new Vector2(0.1f / shp, 0.55f / shp);
+                sr.gameObject.AddComponent<Rigidbody2D>();
+                var hippo = sr.gameObject.AddComponent<SuperYao.Enemy>();
+                hippo.kind = kind;
+                hippo.walkFrames = walk;
+                hippo.chargeFrames = walk;
+                hippo.hitFrames = new[] { LoadSprite($"{GameplayDir}Enemies/hippo_hit.png") };
+                hippo.facesRight = true;
+                hippo.hp = 2;
+                hippo.speed = 0.45f * 3.75f;
+                hippo.chargeSpeed = 7.5f;
+                hippo.sight = 8f;
+                return;
+            }
             if (kind == SuperYao.Enemy.Kind.Monkey)
             {
                 // Singe (images du téléphone : 6 poses de marche, 6 de lancer, 4 de coup reçu) : 1,6 case de haut, il

@@ -38,6 +38,9 @@ namespace SuperYao.EditorTools
             Stage04Builder.Build();
             Stage05Builder.Build();
             Stage06Builder.Build();
+            Stage07Builder.Build();
+            Stage08Builder.Build();
+            Stage09Builder.Build();
             MenuBuilder.Build();
 
             var roots = new List<string>();

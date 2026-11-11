@@ -462,11 +462,42 @@ namespace SuperYao.EditorTools
             float s = len / sr.sprite.bounds.size.x;
             sr.transform.localScale = new Vector3(s, s, 1f);
             float h = sr.sprite.bounds.size.y * s;
-            sr.transform.localPosition = new Vector3(mid, top - h * 0.86f, 0f);
+            // Le dessus de l'écorce n'est pas plat dans les images (branche 2 en biais, fourche de la branche 3) : la
+            // surface où l'on marche suit son profil mesuré ; l'image est placée pour que le dessus moyen soit en top.
+            var profile = BarkTop[art - 1];
+            float mean = 0f;
+            foreach (var p in profile) mean += p;
+            mean /= profile.Length;
+            float bottom = top - h * mean;
+            sr.transform.localPosition = new Vector3(mid, bottom, 0f);
             var go = new GameObject($"Branche_x{x0:0.#}-{x1:0.#}");
             go.transform.SetParent(parent, false);
-            CourseKit.OneWay(go, mid, top, len * 0.88f);
+            var pts = new Vector2[profile.Length];
+            for (int i = 0; i < profile.Length; i++)
+            {
+                float f = BarkFrom + i * BarkStep;          // depuis le bout épais (à gauche dans l'image)
+                float x = leftward ? x1 - f * len : x0 + f * len;
+                pts[i] = new Vector2(x, bottom + profile[i] * h - 0.03f);
+            }
+            if (leftward) System.Array.Reverse(pts);
+            var edge = go.AddComponent<EdgeCollider2D>();
+            edge.points = pts;
+            edge.sharedMaterial = frictionless;
+            edge.usedByEffector = true;
+            var effector = go.AddComponent<PlatformEffector2D>();
+            effector.useOneWay = true;
+            effector.surfaceArc = 160f;
         }
+
+        /// <summary>Dessus de l'écorce des trois branches (part de la hauteur de l'image, depuis le bas), de 7 % à 93 % de
+        /// leur longueur depuis le bout épais (mesuré sur les images, sans les feuilles).</summary>
+        const float BarkFrom = 0.07f, BarkStep = 0.86f / 18f;
+        static readonly float[][] BarkTop =
+        {
+            new[] { 0.84f, 0.84f, 0.83f, 0.84f, 0.81f, 0.81f, 0.81f, 0.82f, 0.82f, 0.82f, 0.82f, 0.81f, 0.81f, 0.81f, 0.81f, 0.81f, 0.82f, 0.81f, 0.82f },
+            new[] { 0.59f, 0.57f, 0.58f, 0.60f, 0.61f, 0.63f, 0.65f, 0.67f, 0.70f, 0.73f, 0.76f, 0.79f, 0.82f, 0.85f, 0.88f, 0.91f, 0.94f, 0.96f, 1.00f },
+            new[] { 0.79f, 0.75f, 0.76f, 0.76f, 0.77f, 0.77f, 0.76f, 0.77f, 0.77f, 0.76f, 0.76f, 0.79f, 0.89f, 0.95f, 0.97f, 0.97f, 0.97f, 0.97f, 0.96f },
+        };
 
         /// <summary>Plate-forme en bois (planche sur pieds) de largeur <paramref name="width"/>, dessus en
         /// <paramref name="top"/> ; <paramref name="baseY"/> sinon calculé (pieds dans l'eau pour le banc-passerelle).</summary>

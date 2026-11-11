@@ -21,12 +21,14 @@ namespace SuperYao
 
         /// <summary>Lumière du moment (blanc le jour) : la brume de profondeur (Haze) la reprend.</summary>
         public static Color CurrentTint { get; private set; } = Color.white;
+        /// <summary>Part de nuit du moment, de 0 (jour ou soir) à 1 (pleine nuit) : lucioles et champignons s'allument.</summary>
+        public static float Night { get; private set; }
 
         readonly List<SpriteRenderer> tinted = new List<SpriteRenderer>();
         readonly List<Color> baseColors = new List<Color>();
         Camera cam;
 
-        void OnDestroy() => CurrentTint = Color.white;
+        void OnDestroy() { CurrentTint = Color.white; Night = 0f; }
 
         void Start()
         {
@@ -56,6 +58,7 @@ namespace SuperYao
             SetAlpha(moon, night);
             var tint = Color.Lerp(Color.Lerp(Color.white, duskTint, dusk), nightTint, night);
             CurrentTint = tint;
+            Night = night;
             for (int i = 0; i < tinted.Count; i++)
             {
                 var r = tinted[i];
